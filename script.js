@@ -2,7 +2,7 @@
 
 // Configuração do Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyC2-ZPAOjhI1wxsU-6uNFhj7MLmlu_8CAw",
+  apiKey: "SUA_API_KEY", // Substitua por sua chave API do Firebase
   authDomain: "estoque-338a7.firebaseapp.com",
   projectId: "estoque-338a7",
   storageBucket: "estoque-338a7.appspot.com",
@@ -24,16 +24,6 @@ let responsaveis = [];
 
 // Carregar dados iniciais
 function carregarDados() {
-  // Carregar produtos
-  db.collection('produtos').get().then((querySnapshot) => {
-    produtos = [];
-    querySnapshot.forEach((doc) => {
-      let produto = doc.data();
-      produto.idProduto = doc.id;
-      produtos.push(produto);
-    });
-  });
-
   // Carregar responsáveis
   db.collection('responsaveis').get().then((querySnapshot) => {
     responsaveis = [];
@@ -41,6 +31,16 @@ function carregarDados() {
       let responsavel = doc.data();
       responsavel.idResponsavel = doc.id;
       responsaveis.push(responsavel);
+    });
+  });
+
+  // Carregar produtos
+  db.collection('produtos').get().then((querySnapshot) => {
+    produtos = [];
+    querySnapshot.forEach((doc) => {
+      let produto = doc.data();
+      produto.idProduto = doc.id;
+      produtos.push(produto);
     });
   });
 }
@@ -61,17 +61,18 @@ window.onload = function() {
   // Botões do menu
   const btnAddProduto = document.getElementById('btnAddProduto');
   const btnSaidaProduto = document.getElementById('btnSaidaProduto');
+  const btnProdutos = document.getElementById('btnProdutos');
   const btnRelatorios = document.getElementById('btnRelatorios');
 
   // Modais
   const modalAddProduto = document.getElementById('modalAddProduto');
   const modalSaidaProduto = document.getElementById('modalSaidaProduto');
-  const modalRelatorios = document.getElementById('modalRelatorios');
+  const modalProdutos = document.getElementById('modalProdutos');
 
   // Botões de fechar
   const closeAddProduto = document.getElementById('closeAddProduto');
   const closeSaidaProduto = document.getElementById('closeSaidaProduto');
-  const closeRelatorios = document.getElementById('closeRelatorios');
+  const closeProdutos = document.getElementById('closeProdutos');
 
   // Formulários
   const formAddProduto = document.getElementById('formAddProduto');
@@ -86,12 +87,17 @@ window.onload = function() {
   btnSaidaProduto.onclick = function() {
     abrirModal(modalSaidaProduto);
     carregarResponsaveisNoSelect('responsavelLiberacao');
-    carregarProdutosNoInput('produtoSaida');
+    carregarProdutosNoSelect('produtoSaida');
   };
 
+  btnProdutos.onclick = function() {
+    abrirModal(modalProdutos);
+    exibirProdutos();
+  };
+
+  // Abrir relatórios em nova aba
   btnRelatorios.onclick = function() {
-    abrirModal(modalRelatorios);
-    gerarRelatorios();
+    window.open('relatorios.html', '_blank');
   };
 
   // Eventos de fechamento dos modais
@@ -103,8 +109,8 @@ window.onload = function() {
     fecharModal(modalSaidaProduto);
   };
 
-  closeRelatorios.onclick = function() {
-    fecharModal(modalRelatorios);
+  closeProdutos.onclick = function() {
+    fecharModal(modalProdutos);
   };
 
   // Evento para submissão do formulário de adicionar produto
@@ -146,39 +152,18 @@ function adicionarProduto() {
       produto.idProduto = docRef.id;
       produtos.push(produto);
       alert('Produto adicionado com sucesso!');
-      salvarEntrada(produto.idProduto, quantidadeEntrada, responsavelEntrada, identificacaoNF, numeroLote, dataValidade);
     })
     .catch((error) => {
       console.error('Erro ao adicionar produto: ', error);
-    }); 
-}
-
-// Função para salvar entrada
-function salvarEntrada(idProduto, quantidadeEntrada, responsavelEntrada, identificacaoNF, numeroLote, dataValidade) {
-  let entrada = {
-    idProduto: idProduto,
-    dataEntrada: new Date().toLocaleString(),
-    quantidadeEntrada: quantidadeEntrada,
-    responsavelEntrada: responsavelEntrada,
-    identificacaoNF: identificacaoNF,
-    numeroLote: numeroLote,
-    dataValidade: dataValidade
-  };
-
-  db.collection('entradas').add(entrada)
-    .then((docRef) => {
-      entrada.idEntrada = docRef.id;
-      entradas.push(entrada);
-    })
-    .catch((error) => {
-      console.error('Erro ao registrar entrada: ', error);
     });
 }
 
 // Função para registrar saída
 function registrarSaida() {
-  const nomeProduto = document.getElementById('produtoSaida').value;
-  const numeroLote = document.getElementById('numeroLoteSaida').value;
+  const produtoSaidaSelect = document.getElementById('produtoSaida');
+  const nomeProduto = produtoSaidaSelect.value;
+  const numeroLoteSelect = document.getElementById('numeroLoteSaida');
+  const numeroLote = numeroLoteSelect.value;
   const quantidadeSaida = parseInt(document.getElementById('quantidadeSaida').value);
   const localDestino = document.getElementById('localDestino').value;
   const responsavelLiberacao = document.getElementById('responsavelLiberacao').value;
@@ -228,33 +213,6 @@ function registrarSaida() {
   });
 }
 
-// Função para gerar relatórios
-function gerarRelatorios() {
-  const relatoriosContent = document.getElementById('relatoriosContent');
-  relatoriosContent.innerHTML = '';
-
-  // Exemplo de relatório de produtos em estoque
-  db.collection('produtos').get().then((querySnapshot) => {
-    const titulo = document.createElement('h3');
-    titulo.textContent = 'Produtos em Estoque';
-    relatoriosContent.appendChild(titulo);
-
-    const tabela = document.createElement('table');
-    const cabecalho = document.createElement('tr');
-    cabecalho.innerHTML = '<th>Nome do Produto</th><th>Número do Lote</th><th>Quantidade</th><th>Data de Validade</th>';
-    tabela.appendChild(cabecalho);
-
-    querySnapshot.forEach((doc) => {
-      let produto = doc.data();
-      const linha = document.createElement('tr');
-      linha.innerHTML = `<td>${produto.nomeProduto}</td><td>${produto.numeroLote}</td><td>${produto.quantidade}</td><td>${produto.dataValidade}</td>`;
-      tabela.appendChild(linha);
-    });
-
-    relatoriosContent.appendChild(tabela);
-  });
-}
-
 // Função para carregar responsáveis no select
 function carregarResponsaveisNoSelect(selectId) {
   const select = document.getElementById(selectId);
@@ -267,14 +225,63 @@ function carregarResponsaveisNoSelect(selectId) {
   });
 }
 
-// Função para carregar produtos no input de saída
-function carregarProdutosNoInput(inputId) {
-  const input = document.getElementById(inputId);
-  input.innerHTML = '';
+// Função para carregar produtos no select de saída
+function carregarProdutosNoSelect(selectId) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = '';
   produtos.forEach(produto => {
     const option = document.createElement('option');
     option.value = produto.nomeProduto;
     option.text = produto.nomeProduto;
-    input.appendChild(option);
+    select.appendChild(option);
   });
+
+  // Carregar os lotes correspondentes quando um produto é selecionado
+  select.onchange = function() {
+    carregarLotesNoSelect('numeroLoteSaida', select.value);
+  };
+
+  // Carregar lotes para o primeiro produto por padrão
+  if (produtos.length > 0) {
+    carregarLotesNoSelect('numeroLoteSaida', produtos[0].nomeProduto);
+  }
+}
+
+// Função para carregar lotes no select de número de lote
+function carregarLotesNoSelect(selectId, nomeProduto) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = '';
+  
+  const lotes = produtos.filter(p => p.nomeProduto === nomeProduto);
+
+  lotes.forEach(produto => {
+    const option = document.createElement('option');
+    option.value = produto.numeroLote;
+    option.text = produto.numeroLote;
+    select.appendChild(option);
+  });
+}
+
+// Função para exibir produtos em estoque
+function exibirProdutos() {
+  const produtosContent = document.getElementById('produtosContent');
+  produtosContent.innerHTML = '';
+
+  if (produtos.length === 0) {
+    produtosContent.innerHTML = '<p>Nenhum produto em estoque.</p>';
+    return;
+  }
+
+  const tabela = document.createElement('table');
+  const cabecalho = document.createElement('tr');
+  cabecalho.innerHTML = '<th>Nome do Produto</th><th>Número do Lote</th><th>Quantidade</th><th>Data de Validade</th>';
+  tabela.appendChild(cabecalho);
+
+  produtos.forEach(produto => {
+    const linha = document.createElement('tr');
+    linha.innerHTML = `<td>${produto.nomeProduto}</td><td>${produto.numeroLote}</td><td>${produto.quantidade}</td><td>${produto.dataValidade}</td>`;
+    tabela.appendChild(linha);
+  });
+
+  produtosContent.appendChild(tabela);
 }
