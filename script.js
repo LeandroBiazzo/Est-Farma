@@ -28,8 +28,25 @@ let idResponsavel = 1;
 
 // Carregar dados iniciais
 function carregarDados() {
-  // Aqui poderíamos carregar dados de um arquivo JSON ou servidor.
-  // Para simplificar, iniciaremos com arrays vazios.
+  // Carregar produtos
+  db.collection('produtos').get().then((querySnapshot) => {
+    produtos = [];
+    querySnapshot.forEach((doc) => {
+      let produto = doc.data();
+      produto.idProduto = doc.id;
+      produtos.push(produto);
+    });
+  });
+
+  // Carregar responsáveis
+  db.collection('responsaveis').get().then((querySnapshot) => {
+    responsaveis = [];
+    querySnapshot.forEach((doc) => {
+      let responsavel = doc.data();
+      responsavel.idResponsavel = doc.id;
+      responsaveis.push(responsavel);
+    });
+  });
 }
 
 // Funções para abrir e fechar modais
