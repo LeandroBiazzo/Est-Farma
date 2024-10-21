@@ -11,6 +11,8 @@
   <!-- Firebase Firestore - usando a versão de compatibilidade -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
+  <!-- Seu script.js -->
+  <script src="script.js"></script>
 </head>
 <body>
   <h1>Controle de Estoque</h1>
@@ -32,7 +34,6 @@
       <h2>Adicionar Produto</h2>
       <form id="formAddProduto">
         <!-- Campos do formulário -->
-        <!-- ... (sem alterações nesta parte) -->
         <label for="nomeProduto">Nome do Produto:</label>
         <input type="text" id="nomeProduto" name="nomeProduto" required>
 
@@ -65,7 +66,6 @@
       <h2>Registrar Saída</h2>
       <form id="formSaidaProduto">
         <!-- Campos do formulário -->
-        <!-- ... (sem alterações nesta parte) -->
         <label for="produtoSaida">Produto:</label>
         <select id="produtoSaida" name="produtoSaida" required>
           <!-- Opções serão carregadas dinamicamente -->
@@ -118,7 +118,5 @@
     </div>
   </div>
 
-  <!-- Seu script.js -->
-  <script src="script.js"></script>
 </body>
 </html>
