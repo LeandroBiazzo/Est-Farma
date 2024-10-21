@@ -2,7 +2,7 @@
 
 // Configuração do Firebase
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY", // Substitua por sua chave API do Firebase
+  apiKey: "AIzaSyC2-ZPAOjhI1wxsU-6uNFhj7MLmlu_8CAw",
   authDomain: "estoque-338a7.firebaseapp.com",
   projectId: "estoque-338a7",
   storageBucket: "estoque-338a7.appspot.com",
@@ -68,13 +68,13 @@ window.onload = function() {
   const modalAddProduto = document.getElementById('modalAddProduto');
   const modalSaidaProduto = document.getElementById('modalSaidaProduto');
   const modalProdutos = document.getElementById('modalProdutos');
-  const modalRelatorios = document.getElementById('modalRelatorios'); // Adicionado
+  const modalRelatorios = document.getElementById('modalRelatorios');
 
   // Botões de fechar
   const closeAddProduto = document.getElementById('closeAddProduto');
   const closeSaidaProduto = document.getElementById('closeSaidaProduto');
   const closeProdutos = document.getElementById('closeProdutos');
-  const closeRelatorios = document.getElementById('closeRelatorios'); // Adicionado
+  const closeRelatorios = document.getElementById('closeRelatorios');
 
   // Formulários
   const formAddProduto = document.getElementById('formAddProduto');
@@ -115,7 +115,7 @@ window.onload = function() {
     fecharModal(modalProdutos);
   };
 
-  closeRelatorios.onclick = function() { // Adicionado
+  closeRelatorios.onclick = function() {
     fecharModal(modalRelatorios);
   };
 
@@ -136,12 +136,87 @@ window.onload = function() {
 
 // Função para adicionar um produto
 function adicionarProduto() {
-  // ... (sem alterações nesta função)
+  const nomeProduto = document.getElementById('nomeProduto').value;
+  const identificacaoNF = document.getElementById('identificacaoNF').value;
+  const dataValidade = document.getElementById('dataValidade').value;
+  const numeroLote = document.getElementById('numeroLote').value;
+  const responsavelEntrada = document.getElementById('responsavelEntrada').value;
+  const quantidadeEntrada = parseInt(document.getElementById('quantidadeEntrada').value);
+
+  let produto = {
+    nomeProduto: nomeProduto,
+    identificacaoNF: identificacaoNF,
+    dataValidade: dataValidade,
+    numeroLote: numeroLote,
+    quantidade: quantidadeEntrada,
+    responsavelEntrada: responsavelEntrada
+  };
+
+  // Salvar no Firestore
+  db.collection('produtos').add(produto)
+    .then((docRef) => {
+      produto.idProduto = docRef.id;
+      produtos.push(produto);
+      alert('Produto adicionado com sucesso!');
+    })
+    .catch((error) => {
+      console.error('Erro ao adicionar produto: ', error);
+    });
 }
 
 // Função para registrar saída
 function registrarSaida() {
-  // ... (sem alterações nesta função)
+  const produtoSaidaSelect = document.getElementById('produtoSaida');
+  const nomeProduto = produtoSaidaSelect.value;
+  const numeroLoteSelect = document.getElementById('numeroLoteSaida');
+  const numeroLote = numeroLoteSelect.value;
+  const quantidadeSaida = parseInt(document.getElementById('quantidadeSaida').value);
+  const localDestino = document.getElementById('localDestino').value;
+  const responsavelLiberacao = document.getElementById('responsavelLiberacao').value;
+
+  // Encontrar produto no array local
+  let produto = produtos.find(p => p.nomeProduto === nomeProduto && p.numeroLote === numeroLote);
+
+  if (!produto) {
+    alert('Produto não encontrado!');
+    return;
+  }
+
+  if (quantidadeSaida > produto.quantidade) {
+    alert('Quantidade indisponível em estoque!');
+    return;
+  }
+
+  // Atualizar quantidade no Firestore
+  db.collection('produtos').doc(produto.idProduto).update({
+    quantidade: produto.quantidade - quantidadeSaida
+  })
+  .then(() => {
+    produto.quantidade -= quantidadeSaida;
+
+    // Registrar saída
+    let saida = {
+      idProduto: produto.idProduto,
+      dataSaida: new Date().toLocaleString(),
+      quantidadeSaida: quantidadeSaida,
+      numeroLote: numeroLote,
+      localDestino: localDestino,
+      responsavelLiberacao: responsavelLiberacao
+    };
+
+    db.collection('saidas').add(saida)
+      .then((docRef) => {
+        saida.idSaida = docRef.id;
+        saidas.push(saida);
+        alert('Saída registrada com sucesso!');
+      })
+      .catch((error) => {
+        console.error('Erro ao registrar saída: ', error);
+      });
+  })
+  .catch((error) => {
+    console.error('Erro ao atualizar produto: ', error);
+  });
 }
 
 // Função para carregar responsáveis no select
@@ -195,10 +270,29 @@ function carregarLotesNoSelect(selectId, nomeProduto) {
 
 // Função para exibir produtos em estoque
 function exibirProdutos() {
-  // ... (sem alterações nesta função)
+  const produtosContent = document.getElementById('produtosContent');
+  produtosContent.innerHTML = '';
+
+  if (produtos.length === 0) {
+    produtosContent.innerHTML = '<p>Nenhum produto em estoque.</p>';
+    return;
+  }
+
+  const tabela = document.createElement('table');
+  const cabecalho = document.createElement('tr');
+  cabecalho.innerHTML = '<th>Nome do Produto</th><th>Número do Lote</th><th>Quantidade</th><th>Data de Validade</th>';
+  tabela.appendChild(cabecalho);
+
+  produtos.forEach(produto => {
+    const linha = document.createElement('tr');
+    linha.innerHTML = `<td>${produto.nomeProduto}</td><td>${produto.numeroLote}</td><td>${produto.quantidade}</td><td>${produto.dataValidade}</td>`;
+    tabela.appendChild(linha);
+  });
+
+  produtosContent.appendChild(tabela);
 }
 
-// Função para gerar relatórios (adicionada)
+// Função para gerar relatórios
 function gerarRelatorios() {
   const relatoriosContent = document.getElementById('relatoriosContent');
   relatoriosContent.innerHTML = '';
