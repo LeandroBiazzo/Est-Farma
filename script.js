@@ -34,24 +34,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Modais
   const modalAddProduto = document.getElementById('modalAddProduto');
+  const modalAddResponsavel = document.getElementById('modalAddResponsavel'); // Novo modal
   const modalSaidaProduto = document.getElementById('modalSaidaProduto');
   const modalProdutos = document.getElementById('modalProdutos');
   const modalRelatorios = document.getElementById('modalRelatorios');
 
+  // Botões de abrir modais
+  const btnAddResponsavel = document.getElementById('btnAddResponsavel'); // Novo botão
+
   // Botões de fechar
   const closeAddProduto = document.getElementById('closeAddProduto');
+  const closeAddResponsavel = document.getElementById('closeAddResponsavel'); // Novo
   const closeSaidaProduto = document.getElementById('closeSaidaProduto');
   const closeProdutos = document.getElementById('closeProdutos');
   const closeRelatorios = document.getElementById('closeRelatorios');
 
   // Formulários
   const formAddProduto = document.getElementById('formAddProduto');
+  const formAddResponsavel = document.getElementById('formAddResponsavel'); // Novo
   const formSaidaProduto = document.getElementById('formSaidaProduto');
 
   // Eventos de abertura dos modais
   btnAddProduto.onclick = function() {
     abrirModal(modalAddProduto);
     carregarResponsaveisNoSelect('responsavelEntrada');
+  };
+
+  btnAddResponsavel.onclick = function() {
+    abrirModal(modalAddResponsavel);
   };
 
   btnSaidaProduto.onclick = function() {
@@ -75,6 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
     fecharModal(modalAddProduto);
   };
 
+  closeAddResponsavel.onclick = function() {
+    fecharModal(modalAddResponsavel);
+  };
+
   closeSaidaProduto.onclick = function() {
     fecharModal(modalSaidaProduto);
   };
@@ -94,6 +108,13 @@ document.addEventListener('DOMContentLoaded', function() {
     fecharModal(modalAddProduto);
   };
 
+  // Evento para submissão do formulário de adicionar responsável
+  formAddResponsavel.onsubmit = function(e) {
+    e.preventDefault();
+    adicionarResponsavel();
+    fecharModal(modalAddResponsavel);
+  };
+
   // Evento para submissão do formulário de registrar saída
   formSaidaProduto.onsubmit = function(e) {
     e.preventDefault();
@@ -110,10 +131,6 @@ function abrirModal(modal) {
 function fecharModal(modal) {
   modal.style.display = "none";
 }
-
-// As demais funções permanecem as mesmas
-// carregarDados, adicionarProduto, registrarSaida, carregarResponsaveisNoSelect,
-// carregarProdutosNoSelect, carregarLotesNoSelect, exibirProdutos, gerarRelatorios
 
 // Função para carregar dados iniciais
 function carregarDados() {
@@ -138,4 +155,110 @@ function carregarDados() {
   });
 }
 
-// As demais funções continuam iguais, sem alterações
+// Função para adicionar responsável
+function adicionarResponsavel() {
+  const nomeResponsavel = document.getElementById('nomeResponsavel').value;
+  let responsavel = { nomeResponsavel: nomeResponsavel };
+
+  // Salvar no Firestore
+  db.collection('responsaveis').add(responsavel)
+    .then((docRef) => {
+      responsavel.idResponsavel = docRef.id;
+      responsaveis.push(responsavel);
+      alert('Responsável adicionado com sucesso!');
+      carregarResponsaveisNoSelect('responsavelEntrada'); // Atualiza o select
+      carregarResponsaveisNoSelect('responsavelLiberacao'); // Atualiza outro select, se necessário
+    })
+    .catch((error) => {
+      console.error('Erro ao adicionar responsável: ', error);
+    });
+}
+
+// Função para carregar responsáveis no select
+function carregarResponsaveisNoSelect(selectId) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = '';
+
+  // Ordenar responsaveis por nome
+  responsaveis.sort((a, b) => a.nomeResponsavel.localeCompare(b.nomeResponsavel));
+
+  responsaveis.forEach(resp => {
+    const option = document.createElement('option');
+    option.value = resp.nomeResponsavel;
+    option.text = resp.nomeResponsavel;
+    select.appendChild(option);
+  });
+}
+
+// Função para carregar produtos no select de saída
+function carregarProdutosNoSelect(selectId) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = '';
+
+  // Ordenar produtos por nome
+  produtos.sort((a, b) => a.nomeProduto.localeCompare(b.nomeProduto));
+
+  produtos.forEach(produto => {
+    const option = document.createElement('option');
+    option.value = produto.nomeProduto;
+    option.text = produto.nomeProduto;
+    select.appendChild(option);
+  });
+
+  // Evento de mudança para carregar lotes correspondentes
+  select.onchange = function() {
+    carregarLotesNoSelect('numeroLoteSaida', select.value);
+  };
+
+  // Carregar lotes para o primeiro produto por padrão
+  if (produtos.length > 0) {
+    carregarLotesNoSelect('numeroLoteSaida', produtos[0].nomeProduto);
+  }
+}
+
+// Função para carregar lotes no select de número de lote
+function carregarLotesNoSelect(selectId, nomeProduto) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = '';
+  
+  const lotes = produtos.filter(p => p.nomeProduto === nomeProduto);
+
+  // Ordenar lotes por número de lote
+  lotes.sort((a, b) => a.numeroLote.localeCompare(b.numeroLote));
+
+  lotes.forEach(produto => {
+    const option = document.createElement('option');
+    option.value = produto.numeroLote;
+    option.text = produto.numeroLote;
+    select.appendChild(option);
+  });
+}
+
+// Função para exibir produtos em estoque
+function exibirProdutos() {
+  const produtosContent = document.getElementById('produtosContent');
+  produtosContent.innerHTML = '';
+
+  if (produtos.length === 0) {
+    produtosContent.innerHTML = '<p>Nenhum produto em estoque.</p>';
+    return;
+  }
+
+  // Ordenar produtos por nome
+  produtos.sort((a, b) => a.nomeProduto.localeCompare(b.nomeProduto));
+
+  const tabela = document.createElement('table');
+  const cabecalho = document.createElement('tr');
+  cabecalho.innerHTML = '<th>Nome do Produto</th><th>Número do Lote</th><th>Quantidade</th><th>Data de Validade</th>';
+  tabela.appendChild(cabecalho);
+
+  produtos.forEach(produto => {
+    const linha = document.createElement('tr');
+    linha.innerHTML = `<td>${produto.nomeProduto}</td><td>${produto.numeroLote}</td><td>${produto.quantidade}</td><td>${produto.dataValidade}</td>`;
+    tabela.appendChild(linha);
+  });
+
+  produtosContent.appendChild(tabela);
+}
+
+// As demais funções (adicionarProduto, registrarSaida, gerarRelatorios) permanecem as mesmas
