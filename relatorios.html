@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatórios</title>
+  <!-- Firebase App (núcleo SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <!-- Firebase Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Relatórios</h1>
+  <!-- Conteúdo dos relatórios será inserido aqui -->
+  <div id="relatoriosContent"></div>
+
+  <!-- Seu script.js -->
+  <script src="script.js"></script>
+  <script>
+    // Inicializar Firebase no relatorios.html
+    firebase.initializeApp(firebaseConfig);
+
+    // Chamar a função para gerar os relatórios
+    window.onload = function() {
+      gerarRelatorios();
+    };
+  </script>
+</body>
+</html>
