@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Controle de Estoque</title>
+  <!-- Firebase App (núcleo SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <!-- Firebase Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -10,6 +15,7 @@
   <nav>
     <button id="btnAddProduto">Adicionar Produto</button>
     <button id="btnSaidaProduto">Registrar Saída</button>
+    <button id="btnProdutos">Produtos</button>
     <button id="btnRelatorios">Relatórios</button>
   </nav>
   
@@ -84,16 +90,20 @@
     </div>
   </div>
 
-  <!-- Modal para Relatórios -->
-  <div id="modalRelatorios" class="modal">
+  <!-- Modal para exibir produtos -->
+  <div id="modalProdutos" class="modal">
     <div class="modal-content">
-      <span class="close" id="closeRelatorios">&times;</span>
-      <h2>Relatórios</h2>
-      <!-- Conteúdo dos relatórios será inserido aqui -->
-      <div id="relatoriosContent"></div>
+      <span class="close" id="closeProdutos">&times;</span>
+      <h2>Produtos em Estoque</h2>
+      <!-- Conteúdo dos produtos será inserido aqui -->
+      <div id="produtosContent"></div>
     </div>
   </div>
 
+  <!-- Janela de Relatórios abre em nova aba -->
+  <!-- O código de relatórios está em relatorios.html -->
+
+  <!-- Seu script.js -->
   <script src="script.js"></script>
 </body>
 </html>
