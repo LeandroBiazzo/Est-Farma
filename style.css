@@ -61,7 +61,7 @@ form label {
   margin-top: 10px;
 }
 
-form input, form select {
+form input, form select, form button {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -70,6 +70,48 @@ form input, form select {
 
 form button {
   margin-top: 20px;
-  padding: 10px;
+}
+
+/* Estilos para o campo Responsável com botão */
+.responsavel-field {
+  margin-top: 10px;
+}
+
+.responsavel-input {
+  display: flex;
+  align-items: center;
+}
+
+.responsavel-input select {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.responsavel-input button {
+  padding: 8px 12px;
+  width: auto; /* Ajusta a largura do botão */
+}
+
+/* Estilos para a tabela de produtos */
+table {
   width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
 }
