@@ -155,118 +155,34 @@ function carregarDados() {
   });
 }
 
-// Função para adicionar responsável
-function adicionarResponsavel() {
-  const nomeResponsavel = document.getElementById('nomeResponsavel').value;
-  let responsavel = { nomeResponsavel: nomeResponsavel };
+// Função para adicionar produto
+function adicionarProduto() {
+  const nomeProduto = document.getElementById('nomeProduto').value;
+  // Removido: const identificacaoNF = document.getElementById('identificacaoNF').value;
+  const dataValidade = document.getElementById('dataValidade').value;
+  const numeroLote = document.getElementById('numeroLote').value;
+  const responsavelEntrada = document.getElementById('responsavelEntrada').value;
+  const quantidadeEntrada = parseInt(document.getElementById('quantidadeEntrada').value);
+
+  let produto = {
+    nomeProduto: nomeProduto,
+    // identificacaoNF: identificacaoNF, // Removido
+    dataValidade: dataValidade,
+    numeroLote: numeroLote,
+    quantidade: quantidadeEntrada,
+    responsavelEntrada: responsavelEntrada
+  };
 
   // Salvar no Firestore
-  db.collection('responsaveis').add(responsavel)
+  db.collection('produtos').add(produto)
     .then((docRef) => {
-      responsavel.idResponsavel = docRef.id;
-      responsaveis.push(responsavel);
-      alert('Responsável adicionado com sucesso!');
-      carregarResponsaveisNoSelect('responsavelEntrada'); // Atualiza o select
-      carregarResponsaveisNoSelect('responsavelLiberacao'); // Atualiza outro select, se necessário
+      produto.idProduto = docRef.id;
+      produtos.push(produto);
+      alert('Produto adicionado com sucesso!');
     })
     .catch((error) => {
-      console.error('Erro ao adicionar responsável: ', error);
+      console.error('Erro ao adicionar produto: ', error);
     });
 }
 
-// Função para carregar responsáveis no select
-function carregarResponsaveisNoSelect(selectId) {
-  const select = document.getElementById(selectId);
-  select.innerHTML = '';
-
-  // Ordenar responsaveis por nome
-  responsaveis.sort((a, b) => a.nomeResponsavel.localeCompare(b.nomeResponsavel));
-
-  responsaveis.forEach(resp => {
-    const option = document.createElement('option');
-    option.value = resp.nomeResponsavel;
-    option.text = resp.nomeResponsavel;
-    select.appendChild(option);
-  });
-}
-
-// Função para carregar produtos no select de saída
-function carregarProdutosNoSelect(selectId) {
-  const select = document.getElementById(selectId);
-  select.innerHTML = '';
-
-  // Ordenar produtos por nome
-  produtos.sort((a, b) => a.nomeProduto.localeCompare(b.nomeProduto));
-
-  // Obter produtos únicos (sem repetir nomes)
-  const produtosUnicos = produtos.reduce((acc, produto) => {
-    if (!acc.find(p => p.nomeProduto === produto.nomeProduto)) {
-      acc.push(produto);
-    }
-    return acc;
-  }, []);
-
-  produtosUnicos.forEach(produto => {
-    const option = document.createElement('option');
-    option.value = produto.nomeProduto;
-    option.text = produto.nomeProduto;
-    select.appendChild(option);
-  });
-
-  // Evento de mudança para carregar lotes correspondentes
-  select.onchange = function() {
-    carregarLotesNoSelect('numeroLoteSaida', select.value);
-  };
-
-  // Carregar lotes para o primeiro produto por padrão
-  if (produtosUnicos.length > 0) {
-    carregarLotesNoSelect('numeroLoteSaida', produtosUnicos[0].nomeProduto);
-  }
-}
-
-// Função para carregar lotes no select de número de lote
-function carregarLotesNoSelect(selectId, nomeProduto) {
-  const select = document.getElementById(selectId);
-  select.innerHTML = '';
-  
-  const lotes = produtos.filter(p => p.nomeProduto === nomeProduto);
-
-  // Ordenar lotes por número de lote
-  lotes.sort((a, b) => a.numeroLote.localeCompare(b.numeroLote));
-
-  lotes.forEach(produto => {
-    const option = document.createElement('option');
-    option.value = produto.numeroLote;
-    option.text = produto.numeroLote;
-    select.appendChild(option);
-  });
-}
-
-// Função para exibir produtos em estoque
-function exibirProdutos() {
-  const produtosContent = document.getElementById('produtosContent');
-  produtosContent.innerHTML = '';
-
-  if (produtos.length === 0) {
-    produtosContent.innerHTML = '<p>Nenhum produto em estoque.</p>';
-    return;
-  }
-
-  // Ordenar produtos por nome
-  produtos.sort((a, b) => a.nomeProduto.localeCompare(b.nomeProduto));
-
-  const tabela = document.createElement('table');
-  const cabecalho = document.createElement('tr');
-  cabecalho.innerHTML = '<th>Nome do Produto</th><th>Número do Lote</th><th>Quantidade</th><th>Data de Validade</th>';
-  tabela.appendChild(cabecalho);
-
-  produtos.forEach(produto => {
-    const linha = document.createElement('tr');
-    linha.innerHTML = `<td>${produto.nomeProduto}</td><td>${produto.numeroLote}</td><td>${produto.quantidade}</td><td>${produto.dataValidade}</td>`;
-    tabela.appendChild(linha);
-  });
-
-  produtosContent.appendChild(tabela);
-}
-
-// As demais funções (adicionarProduto, registrarSaida, gerarRelatorios) permanecem as mesmas
+// As demais funções (adicionarResponsavel, carregarResponsaveisNoSelect, carregarProdutosNoSelect, carregarLotesNoSelect, exibirProdutos, registrarSaida) permanecem as mesmas
