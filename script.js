@@ -1,5 +1,21 @@
 // script.js
 
+// Configuração do Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyC2-ZPAOjhI1wxsU-6uNFhj7MLmlu_8CAw",
+  authDomain: "estoque-338a7.firebaseapp.com",
+  projectId: "estoque-338a7",
+  storageBucket: "estoque-338a7.appspot.com",
+  messagingSenderId: "839845305923",
+  appId: "1:839845305923:web:79e0582a590c450618fef6"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Obter referência ao Firestore
+const db = firebase.firestore();
+
 // Variáveis globais
 let produtos = [];
 let entradas = [];
