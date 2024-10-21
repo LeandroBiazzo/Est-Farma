@@ -44,15 +44,33 @@
         <label for="numeroLote">Número do Lote:</label>
         <input type="text" id="numeroLote" name="numeroLote" required>
 
-        <label for="responsavelEntrada">Responsável:</label>
-        <select id="responsavelEntrada" name="responsavelEntrada" required>
-          <!-- Opções serão carregadas dinamicamente -->
-        </select>
+        <div class="responsavel-field">
+          <label for="responsavelEntrada">Responsável:</label>
+          <div class="responsavel-input">
+            <select id="responsavelEntrada" name="responsavelEntrada" required>
+              <!-- Opções serão carregadas dinamicamente -->
+            </select>
+            <button type="button" id="btnAddResponsavel">Adicionar Responsável</button>
+          </div>
+        </div>
 
         <label for="quantidadeEntrada">Quantidade:</label>
         <input type="number" id="quantidadeEntrada" name="quantidadeEntrada" required>
 
         <button type="submit">Adicionar Produto</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para adicionar responsável -->
+  <div id="modalAddResponsavel" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeAddResponsavel">&times;</span>
+      <h2>Adicionar Responsável</h2>
+      <form id="formAddResponsavel">
+        <label for="nomeResponsavel">Nome do Responsável:</label>
+        <input type="text" id="nomeResponsavel" name="nomeResponsavel" required>
+        <button type="submit">Adicionar Responsável</button>
       </form>
     </div>
   </div>
