@@ -198,7 +198,15 @@ function carregarProdutosNoSelect(selectId) {
   // Ordenar produtos por nome
   produtos.sort((a, b) => a.nomeProduto.localeCompare(b.nomeProduto));
 
-  produtos.forEach(produto => {
+  // Obter produtos únicos (sem repetir nomes)
+  const produtosUnicos = produtos.reduce((acc, produto) => {
+    if (!acc.find(p => p.nomeProduto === produto.nomeProduto)) {
+      acc.push(produto);
+    }
+    return acc;
+  }, []);
+
+  produtosUnicos.forEach(produto => {
     const option = document.createElement('option');
     option.value = produto.nomeProduto;
     option.text = produto.nomeProduto;
@@ -211,8 +219,8 @@ function carregarProdutosNoSelect(selectId) {
   };
 
   // Carregar lotes para o primeiro produto por padrão
-  if (produtos.length > 0) {
-    carregarLotesNoSelect('numeroLoteSaida', produtos[0].nomeProduto);
+  if (produtosUnicos.length > 0) {
+    carregarLotesNoSelect('numeroLoteSaida', produtosUnicos[0].nomeProduto);
   }
 }
 
