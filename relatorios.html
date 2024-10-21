@@ -19,11 +19,16 @@
   <script src="script.js"></script>
   <script>
     // Inicializar Firebase no relatorios.html
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
 
-    // Chamar a função para gerar os relatórios
+    // Chamar a função para gerar os relatórios após carregar os dados
     window.onload = function() {
-      gerarRelatorios();
+      carregarDados();
+      setTimeout(function() {
+        gerarRelatorios();
+      }, 2000); // Ajuste o tempo conforme necessário
     };
   </script>
 </body>
