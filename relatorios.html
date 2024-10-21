@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Relatórios</title>
-  <!-- Firebase App (núcleo SDK) -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <!-- Firebase Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+  <!-- Firebase App (núcleo SDK) - usando a versão de compatibilidade -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <!-- Firebase Firestore - usando a versão de compatibilidade -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
   <link rel="stylesheet" href="style.css">
+
+  <!-- Seu script.js -->
+  <script src="script.js"></script>
 </head>
 <body>
   <h1>Relatórios</h1>
   <!-- Conteúdo dos relatórios será inserido aqui -->
   <div id="relatoriosContent"></div>
 
-  <!-- Seu script.js -->
-  <script src="script.js"></script>
   <script>
     // Inicializar Firebase no relatorios.html
     if (!firebase.apps.length) {
