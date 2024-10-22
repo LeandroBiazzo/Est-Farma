@@ -18,7 +18,7 @@
     <button id="btnAddProduto">Adicionar Produto</button>
     <button id="btnSaidaProduto">Registrar Saída</button>
     <button id="btnProdutos">Produtos</button>
-    <button id="btnRelatorios">Relatórios</button> <!-- Corrigido fechamento do botão -->
+    <button id="btnRelatorios">Relatórios</button>
   </nav>
   
   <section id="content">
@@ -31,11 +31,8 @@
       <span class="close" id="closeAddProduto">&times;</span>
       <h2>Adicionar Produto</h2>
       <form id="formAddProduto">
-        <!-- Campos do formulário -->
         <label for="nomeProduto">Nome do Produto:</label>
         <input type="text" id="nomeProduto" name="nomeProduto" required>
-
-        <!-- Removido o campo Identificação da Nota Fiscal -->
 
         <label for="dataValidade">Data de Validade:</label>
         <input type="date" id="dataValidade" name="dataValidade" required>
@@ -80,7 +77,6 @@
       <span class="close" id="closeSaidaProduto">&times;</span>
       <h2>Registrar Saída</h2>
       <form id="formSaidaProduto">
-        <!-- Campos do formulário -->
         <label for="produtoSaida">Produto:</label>
         <select id="produtoSaida" name="produtoSaida" required>
           <!-- Opções serão carregadas dinamicamente -->
@@ -118,7 +114,6 @@
     <div class="modal-content">
       <span class="close" id="closeProdutos">&times;</span>
       <h2>Produtos em Estoque</h2>
-      <!-- Conteúdo dos produtos será inserido aqui -->
       <div id="produtosContent"></div>
     </div>
   </div>
@@ -128,7 +123,6 @@
     <div class="modal-content">
       <span class="close" id="closeRelatorios">&times;</span>
       <h2>Relatórios</h2>
-      <!-- Conteúdo dos relatórios será inserido aqui -->
       <div id="relatoriosContent"></div>
     </div>
   </div>
