@@ -216,11 +216,16 @@ function carregarDados() {
 
 // Função para adicionar produto
 function adicionarProduto() {
-  const nomeProduto = document.getElementById('nomeProduto').value;
+  const nomeProduto = document.getElementById('nomeProduto').value.trim();
   const dataValidade = document.getElementById('dataValidade').value;
-  const numeroLote = document.getElementById('numeroLote').value;
+  const numeroLote = document.getElementById('numeroLote').value.trim();
   const responsavelEntrada = document.getElementById('responsavelEntrada').value;
   const quantidadeEntrada = parseInt(document.getElementById('quantidadeEntrada').value);
+
+  if (!nomeProduto || !numeroLote) {
+    alert('Nome do produto e Número do Lote não podem estar vazios.');
+    return;
+  }
 
   if (isNaN(quantidadeEntrada) || quantidadeEntrada <= 0) {
     alert('A quantidade deve ser um número positivo.');
@@ -244,9 +249,13 @@ function adicionarProduto() {
       alert('Produto adicionado com sucesso!');
       // Limpar o formulário
       document.getElementById('formAddProduto').reset();
+      // Atualizar a lista de produtos
+      carregarProdutosNoSelect('produtoSaida');
+      exibirProdutos();
     })
     .catch((error) => {
       console.error('Erro ao adicionar produto:', error);
+      alert('Erro ao adicionar produto. Verifique o console para mais detalhes.');
     });
 }
 
@@ -273,9 +282,12 @@ function adicionarResponsavel() {
       // Limpar o formulário
       document.getElementById('formAddResponsavel').reset();
       carregarResponsaveisNaLista();
+      carregarResponsaveisNoSelect('responsavelEntrada');
+      carregarResponsaveisNoSelect('responsavelLiberacao');
     })
     .catch((error) => {
       console.error('Erro ao adicionar responsável:', error);
+      alert('Erro ao adicionar responsável. Verifique o console para mais detalhes.');
     });
 }
 
@@ -344,9 +356,15 @@ function excluirResponsavel(idResponsavel) {
     .then(() => {
       console.log('Responsável excluído com ID:', idResponsavel);
       alert('Responsável excluído com sucesso!');
+      // Atualizar responsáveis em memória
+      responsaveis = responsaveis.filter(r => r.idResponsavel !== idResponsavel);
+      carregarResponsaveisNaLista();
+      carregarResponsaveisNoSelect('responsavelEntrada');
+      carregarResponsaveisNoSelect('responsavelLiberacao');
     })
     .catch((error) => {
       console.error('Erro ao excluir responsável:', error);
+      alert('Erro ao excluir responsável. Verifique o console para mais detalhes.');
     });
 }
 
@@ -470,9 +488,14 @@ function excluirProduto(idProduto) {
     .then(() => {
       console.log('Produto excluído com ID:', idProduto);
       alert('Produto excluído com sucesso!');
+      // Atualizar produtos em memória
+      produtos = produtos.filter(p => p.idProduto !== idProduto);
+      exibirProdutos();
+      carregarProdutosNoSelect('produtoSaida');
     })
     .catch((error) => {
       console.error('Erro ao excluir produto:', error);
+      alert('Erro ao excluir produto. Verifique o console para mais detalhes.');
     });
 }
 
@@ -607,9 +630,17 @@ function salvarEdicaoProduto() {
     .then(() => {
       console.log('Produto atualizado com sucesso:', idProduto);
       alert('Produto atualizado com sucesso!');
+      // Atualizar produtos em memória e exibição
+      const index = produtos.findIndex(p => p.idProduto === idProduto);
+      if (index !== -1) {
+        produtos[index] = { ...produtos[index], ...produtoAtualizado };
+        exibirProdutos();
+        carregarProdutosNoSelect('produtoSaida');
+      }
     })
     .catch((error) => {
       console.error('Erro ao atualizar produto:', error);
+      alert('Erro ao atualizar produto. Verifique o console para mais detalhes.');
     });
 }
 
@@ -662,6 +693,7 @@ function registrarSaida() {
                 console.log('Saída registrada com sucesso:', saida);
                 alert('Saída registrada com sucesso!');
                 document.getElementById('formSaidaProduto').reset();
+                carregarDados(); // Atualizar dados após registrar saída
               })
               .catch((error) => {
                 console.error('Erro ao registrar saída:', error);
@@ -698,8 +730,8 @@ function gerarRelatorios() {
 
 // Fechar modais ao clicar fora deles
 window.onclick = function(event) {
-  const modals = document.querySelectorAll('.modal');
-  modals.forEach(modal => {
+  const modais = document.querySelectorAll('.modal');
+  modais.forEach(modal => {
     if (event.target == modal) {
       fecharModal(modal);
     }
