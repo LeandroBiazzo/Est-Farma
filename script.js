@@ -11,33 +11,35 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Eventos para os botões e carregamento de dados
 document.addEventListener('DOMContentLoaded', function() {
-  carregarDados();
   adicionarEventos();
+  carregarDadosIniciais();
 });
 
 function adicionarEventos() {
-  document.getElementById('btnAddProduto').addEventListener('click', () => abrirModal(document.getElementById('modalAddProduto')));
-  document.getElementById('btnSaidaProduto').addEventListener('click', () => abrirModal(document.getElementById('modalSaidaProduto')));
-  document.getElementById('btnProdutos').addEventListener('click', () => abrirModal(document.getElementById('modalProdutos')));
-  document.getElementById('btnRelatorios').addEventListener('click', () => abrirModal(document.getElementById('modalRelatorios')));
-
-  document.getElementById('closeAddProduto').addEventListener('click', () => fecharModal(document.getElementById('modalAddProduto')));
-  document.getElementById('closeSaidaProduto').addEventListener('click', () => fecharModal(document.getElementById('modalSaidaProduto')));
-  document.getElementById('closeProdutos').addEventListener('click', () => fecharModal(document.getElementById('modalProdutos')));
-  document.getElementById('closeRelatorios').addEventListener('click', () => fecharModal(document.getElementById('modalRelatorios')));
-
-  document.getElementById('formAddProduto').addEventListener('submit', adicionarProduto);
-  document.getElementById('formSaidaProduto').addEventListener('submit', registrarSaida);
+  document.getElementById('btnAddProduto').addEventListener('click', () => abrirModal('modalAddProduto'));
+  document.getElementById('btnSaidaProduto').addEventListener('click', () => abrirModal('modalSaidaProduto'));
+  // Adicionar mais eventos conforme necessário
 }
 
-function abrirModal(modal) {
+function abrirModal(modalId) {
+  const modal = document.getElementById(modalId);
   modal.style.display = 'block';
 }
 
-function fecharModal(modal) {
+function fecharModal(modalId) {
+  const modal = document.getElementById(modalId);
   modal.style.display = 'none';
 }
 
-// Implementação das funções de negócio como adicionarProduto, registrarSaida, etc.
+function carregarDadosIniciais() {
+  // Implementar carregamento de dados do Firestore se necessário
+}
+
+// Implementação de adicionarProduto, registrarSaida, e outras funções relevantes
+function adicionarProduto(e) {
+  e.preventDefault();
+  // Implementar lógica de adicionar produto
+}
+
+// Continuar com mais funções conforme necessário
