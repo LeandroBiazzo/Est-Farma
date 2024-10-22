@@ -23,7 +23,6 @@ nav button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 nav button:hover {
@@ -55,7 +54,6 @@ nav button:hover {
   width: 80%;
   max-width: 600px;
   border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .close {
@@ -84,8 +82,6 @@ form select {
   padding: 8px;
   margin-top: 5px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
 form button {
@@ -97,7 +93,6 @@ form button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 form button:hover {
@@ -126,7 +121,6 @@ form button:hover {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .responsavel-input button:hover {
