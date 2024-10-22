@@ -162,16 +162,26 @@ function adicionarResponsavel() {
     })
     .then(() => {
       alert('Responsável adicionado com sucesso!');
-      // Atualiza a lista de responsáveis sem recarregar todos os dados
-      carregarResponsaveisNoSelect('responsavelEntrada');
-      carregarResponsaveisNoSelect('responsavelLiberacao');
-      fecharModal(document.getElementById('modalAddResponsavel')); // Fecha o modal após o sucesso
+      carregarDados(); // Atualiza a lista de responsáveis
+      fecharModal(document.getElementById('modalAddResponsavel'));
     })
     .catch((error) => {
       console.error('Erro ao adicionar responsável:', error);
     });
   } else {
     alert('Por favor, preencha o nome do responsável.');
+  }
+}
+
+// Função para excluir responsável
+function excluirResponsavel(idResponsavel) {
+  if (confirm('Tem certeza que deseja excluir este responsável?')) {
+    db.collection('responsaveis').doc(idResponsavel).delete().then(() => {
+      alert('Responsável excluído com sucesso!');
+      carregarDados(); // Atualiza a lista de responsáveis
+    }).catch((error) => {
+      console.error('Erro ao excluir responsável:', error);
+    });
   }
 }
 
@@ -185,6 +195,43 @@ function carregarResponsaveisNoSelect(selectId) {
     option.textContent = responsavel.nome;
     select.appendChild(option);
   });
+
+  // Exibir lista de responsáveis com botão de excluir
+  const content = document.getElementById('content');
+  content.innerHTML = '<h3>Lista de Responsáveis</h3>';
+  responsaveis.forEach(responsavel => {
+    const div = document.createElement('div');
+    div.innerHTML = `${responsavel.nome} <button onclick="excluirResponsavel('${responsavel.idResponsavel}')">Excluir</button>`;
+    content.appendChild(div);
+  });
+}
+
+// Função para adicionar produto
+function adicionarProduto() {
+  const nomeProduto = document.getElementById('nomeProduto').value;
+  const dataValidade = document.getElementById('dataValidade').value;
+  const numeroLote = document.getElementById('numeroLote').value;
+  const responsavelEntrada = document.getElementById('responsavelEntrada').value;
+  const quantidadeEntrada = document.getElementById('quantidadeEntrada').value;
+
+  if (nomeProduto && dataValidade && numeroLote && responsavelEntrada && quantidadeEntrada) {
+    db.collection('produtos').add({
+      nomeProduto,
+      dataValidade,
+      numeroLote,
+      responsavelEntrada,
+      quantidadeEntrada: parseInt(quantidadeEntrada)
+    })
+    .then(() => {
+      alert('Produto adicionado com sucesso!');
+      carregarDados(); // Atualiza a lista de produtos
+    })
+    .catch((error) => {
+      console.error('Erro ao adicionar produto:', error);
+    });
+  } else {
+    alert('Por favor, preencha todos os campos.');
+  }
 }
 
 // Função para carregar produtos no select
