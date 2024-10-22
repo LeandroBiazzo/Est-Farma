@@ -18,73 +18,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function adicionarEventos() {
   document.getElementById('btnAddProduto').addEventListener('click', () => abrirModal('modalAddProduto'));
-  document.getElementById('btnSaidaProduto').addEventListener('click', () => abrirModal('modalSaidaProduto'));
-  document.getElementById('btnProdutos').addEventListener('click', () => abrirModal('modalProdutos'));
-  document.getElementById('btnRelatorios').addEventListener('click', () => abrirModal('modalRelatorios'));
-
+  document.getElementById('btnAddResponsavel').addEventListener('click', () => abrirModal('modalAddResponsavel'));
   document.querySelectorAll('.close').forEach(button => {
     button.addEventListener('click', function() {
       const modal = button.closest('.modal');
-      if (modal) {
-        fecharModal(modal.id);
-      }
+      fecharModal(modal.id);
     });
   });
 
   document.getElementById('formAddProduto').addEventListener('submit', adicionarProduto);
-  // Similarmente, adicione eventos para outros formulários conforme necessário
+  document.getElementById('formAddResponsavel').addEventListener('submit', adicionarResponsavel);
 }
 
 function abrirModal(modalId) {
   const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.style.display = 'block';
-  } else {
-    console.error("Modal não encontrado: " + modalId);
-  }
+  modal.style.display = 'block';
 }
 
 function fecharModal(modalId) {
   const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.style.display = 'none';
-  } else {
-    console.error("Modal não encontrado: " + modalId);
-  }
+  modal.style.display = 'none';
 }
 
 function carregarDadosIniciais() {
-  // Implementar carregamento de dados do Firestore se necessário
-  // Exemplo: Carregar produtos e responsáveis para os <select>
+  // Carregue dados necessários para os selects ou listas
 }
 
 function adicionarProduto(e) {
   e.preventDefault();
-  const nomeProduto = document.getElementById('nomeProduto').value;
-  const dataValidade = document.getElementById('dataValidade').value;
-  const numeroLote = document.getElementById('numeroLote').value;
-  const responsavelEntrada = document.getElementById('responsavelEntrada').value;
-  const quantidadeEntrada = parseInt(document.getElementById('quantidadeEntrada').value);
-
-  let produto = {
-    nomeProduto: nomeProduto,
-    dataValidade: dataValidade,
-    numeroLote: numeroLote,
-    quantidade: quantidadeEntrada,
-    responsavelEntrada: responsavelEntrada
-  };
-
-  db.collection('produtos').add(produto)
-    .then(docRef => {
-      console.log('Produto adicionado com ID:', docRef.id);
-      alert('Produto adicionado com sucesso!');
-      document.getElementById('formAddProduto').reset();
-      fecharModal('modalAddProduto');
-    })
-    .catch(error => {
-      console.error('Erro ao adicionar produto: ', error);
-      alert('Erro ao adicionar produto. Por favor, verifique o console para mais detalhes.');
-    });
+  // Implemente a adição de produto ao Firestore
 }
 
-// Funções adicionais para editar, excluir, e registrar saídas podem ser adicionadas aqui.
+function adicionarResponsavel(e) {
+  e.preventDefault();
+  // Implemente a adição de responsável ao Firestore
+}
+
+// Implemente funções adicionais conforme necessário
