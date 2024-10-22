@@ -16,7 +16,6 @@ nav {
 nav button {
   margin: 0 10px;
   padding: 10px 20px;
-  cursor: pointer;
 }
 
 #content {
@@ -27,7 +26,7 @@ nav button {
 .modal {
   display: none; /* Escondido por padrão */
   position: fixed;
-  z-index: 1000; /* Acima de outros elementos */
+  z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
@@ -42,8 +41,6 @@ nav button {
   padding: 20px;
   border: 1px solid #888;
   width: 80%; /* Largura do modal */
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  border-radius: 5px;
 }
 
 .close {
@@ -51,13 +48,13 @@ nav button {
   float: right;
   font-size: 28px;
   font-weight: bold;
-  cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
   color: black;
   text-decoration: none;
+  cursor: pointer;
 }
 
 form label {
@@ -77,7 +74,6 @@ form button {
   margin-top: 20px;
   padding: 10px;
   width: 100%;
-  cursor: pointer;
 }
 
 /* Estilos para o campo Responsável com botão */
@@ -98,7 +94,6 @@ form button {
 .responsavel-input button {
   padding: 8px 12px;
   width: auto; /* Ajusta a largura do botão */
-  cursor: pointer;
 }
 
 /* Estilos para a tabela de produtos */
@@ -126,8 +121,4 @@ tr:nth-child(even) {
 
 tr:hover {
   background-color: #f1f1f1;
-}
-
-button {
-  cursor: pointer;
 }
