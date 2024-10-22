@@ -137,8 +137,8 @@ function carregarDados() {
       responsavel.idResponsavel = doc.id;
       responsaveis.push(responsavel);
     });
-    carregarResponsaveisNoSelect('responsavelEntrada'); // Atualiza o select após carregar dados
-    carregarResponsaveisNoSelect('responsavelLiberacao'); // Atualiza o select de saída também
+    carregarResponsaveisNoSelect('responsavelEntrada');
+    carregarResponsaveisNoSelect('responsavelLiberacao');
   });
 
   // Carregar produtos
@@ -162,7 +162,9 @@ function adicionarResponsavel() {
     })
     .then(() => {
       alert('Responsável adicionado com sucesso!');
-      carregarDados(); // Atualiza a lista de responsáveis
+      // Atualiza a lista de responsáveis sem recarregar todos os dados
+      carregarResponsaveisNoSelect('responsavelEntrada');
+      carregarResponsaveisNoSelect('responsavelLiberacao');
       fecharModal(document.getElementById('modalAddResponsavel')); // Fecha o modal após o sucesso
     })
     .catch((error) => {
