@@ -24,6 +24,8 @@ let responsaveis = [];
 
 // Eventos para os botões e carregamento de dados
 document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM completamente carregado e analisado");
+  
   carregarDados();
 
   // Botões do menu
@@ -54,86 +56,132 @@ document.addEventListener('DOMContentLoaded', function() {
   const formAddResponsavel = document.getElementById('formAddResponsavel'); // Novo
   const formSaidaProduto = document.getElementById('formSaidaProduto');
 
+  // Verificação de elementos
+  if (!btnAddProduto || !btnSaidaProduto || !btnProdutos || !btnRelatorios) {
+    console.error("Um ou mais botões do menu não foram encontrados.");
+    return;
+  }
+
+  if (!modalAddProduto || !modalAddResponsavel || !modalSaidaProduto || !modalProdutos || !modalRelatorios) {
+    console.error("Um ou mais modais não foram encontrados.");
+    return;
+  }
+
   // Eventos de abertura dos modais
   btnAddProduto.onclick = function() {
+    console.log("Clique em Adicionar Produto");
     abrirModal(modalAddProduto);
     carregarResponsaveisNoSelect('responsavelEntrada');
   };
 
   btnAddResponsavel.onclick = function() {
+    console.log("Clique em Adicionar Responsável");
     abrirModal(modalAddResponsavel);
     carregarResponsaveisNaLista();
   };
 
   btnSaidaProduto.onclick = function() {
+    console.log("Clique em Registrar Saída");
     abrirModal(modalSaidaProduto);
     carregarResponsaveisNoSelect('responsavelLiberacao');
     carregarProdutosNoSelect('produtoSaida');
   };
 
   btnProdutos.onclick = function() {
+    console.log("Clique em Produtos");
     abrirModal(modalProdutos);
     exibirProdutos();
   };
 
   btnRelatorios.onclick = function() {
+    console.log("Clique em Relatórios");
     abrirModal(modalRelatorios);
     gerarRelatorios();
   };
 
   // Eventos de fechamento dos modais
   closeAddProduto.onclick = function() {
+    console.log("Fechar Modal Adicionar Produto");
     fecharModal(modalAddProduto);
   };
 
   closeAddResponsavel.onclick = function() {
+    console.log("Fechar Modal Adicionar Responsável");
     fecharModal(modalAddResponsavel);
   };
 
   closeSaidaProduto.onclick = function() {
+    console.log("Fechar Modal Registrar Saída");
     fecharModal(modalSaidaProduto);
   };
 
   closeProdutos.onclick = function() {
+    console.log("Fechar Modal Produtos");
     fecharModal(modalProdutos);
   };
 
   closeRelatorios.onclick = function() {
+    console.log("Fechar Modal Relatórios");
     fecharModal(modalRelatorios);
   };
 
   // Evento para submissão do formulário de adicionar produto
-  formAddProduto.onsubmit = function(e) {
-    e.preventDefault();
-    adicionarProduto();
-    fecharModal(modalAddProduto);
-  };
+  if (formAddProduto) {
+    formAddProduto.onsubmit = function(e) {
+      e.preventDefault();
+      console.log("Submissão do Formulário Adicionar Produto");
+      adicionarProduto();
+      fecharModal(modalAddProduto);
+    };
+  } else {
+    console.error("Formulário de Adicionar Produto não encontrado.");
+  }
 
   // Evento para submissão do formulário de adicionar responsável
-  formAddResponsavel.onsubmit = function(e) {
-    e.preventDefault();
-    adicionarResponsavel();
-  };
+  if (formAddResponsavel) {
+    formAddResponsavel.onsubmit = function(e) {
+      e.preventDefault();
+      console.log("Submissão do Formulário Adicionar Responsável");
+      adicionarResponsavel();
+    };
+  } else {
+    console.error("Formulário de Adicionar Responsável não encontrado.");
+  }
 
   // Evento para submissão do formulário de registrar saída
-  formSaidaProduto.onsubmit = function(e) {
-    e.preventDefault();
-    registrarSaida();
-    fecharModal(modalSaidaProduto);
-  };
+  if (formSaidaProduto) {
+    formSaidaProduto.onsubmit = function(e) {
+      e.preventDefault();
+      console.log("Submissão do Formulário Registrar Saída");
+      registrarSaida();
+      fecharModal(modalSaidaProduto);
+    };
+  } else {
+    console.error("Formulário de Registrar Saída não encontrado.");
+  }
 });
 
 // Funções para abrir e fechar modais
 function abrirModal(modal) {
+  if (!modal) {
+    console.error("Modal não encontrado para abrir.");
+    return;
+  }
   modal.style.display = "block";
 }
 
 function fecharModal(modal) {
+  if (!modal) {
+    console.error("Modal não encontrado para fechar.");
+    return;
+  }
   modal.style.display = "none";
 }
 
 // Função para carregar dados iniciais
 function carregarDados() {
+  console.log("Carregando dados iniciais do Firestore");
+  
   // Carregar responsáveis
   db.collection('responsaveis').onSnapshot((querySnapshot) => {
     responsaveis = [];
@@ -142,9 +190,12 @@ function carregarDados() {
       responsavel.idResponsavel = doc.id;
       responsaveis.push(responsavel);
     });
+    console.log("Responsáveis carregados:", responsaveis);
     carregarResponsaveisNoSelect('responsavelEntrada');
     carregarResponsaveisNoSelect('responsavelLiberacao');
     carregarResponsaveisNaLista();
+  }, (error) => {
+    console.error("Erro ao carregar responsáveis:", error);
   });
 
   // Carregar produtos
@@ -155,23 +206,29 @@ function carregarDados() {
       produto.idProduto = doc.id;
       produtos.push(produto);
     });
+    console.log("Produtos carregados:", produtos);
     carregarProdutosNoSelect('produtoSaida');
     exibirProdutos();
+  }, (error) => {
+    console.error("Erro ao carregar produtos:", error);
   });
 }
 
 // Função para adicionar produto
 function adicionarProduto() {
   const nomeProduto = document.getElementById('nomeProduto').value;
-  // Removido: const identificacaoNF = document.getElementById('identificacaoNF').value;
   const dataValidade = document.getElementById('dataValidade').value;
   const numeroLote = document.getElementById('numeroLote').value;
   const responsavelEntrada = document.getElementById('responsavelEntrada').value;
   const quantidadeEntrada = parseInt(document.getElementById('quantidadeEntrada').value);
 
+  if (isNaN(quantidadeEntrada) || quantidadeEntrada <= 0) {
+    alert('A quantidade deve ser um número positivo.');
+    return;
+  }
+
   let produto = {
     nomeProduto: nomeProduto,
-    // identificacaoNF: identificacaoNF, // Removido
     dataValidade: dataValidade,
     numeroLote: numeroLote,
     quantidade: quantidadeEntrada,
@@ -183,20 +240,21 @@ function adicionarProduto() {
     .then((docRef) => {
       produto.idProduto = docRef.id;
       produtos.push(produto);
+      console.log('Produto adicionado com ID:', docRef.id);
       alert('Produto adicionado com sucesso!');
       // Limpar o formulário
       document.getElementById('formAddProduto').reset();
     })
     .catch((error) => {
-      console.error('Erro ao adicionar produto: ', error);
+      console.error('Erro ao adicionar produto:', error);
     });
 }
 
 // Função para adicionar responsável
 function adicionarResponsavel() {
-  const nomeResponsavel = document.getElementById('nomeResponsavel').value;
+  const nomeResponsavel = document.getElementById('nomeResponsavel').value.trim();
 
-  if (nomeResponsavel.trim() === "") {
+  if (nomeResponsavel === "") {
     alert('O nome do responsável não pode estar vazio.');
     return;
   }
@@ -210,19 +268,24 @@ function adicionarResponsavel() {
     .then((docRef) => {
       responsavel.idResponsavel = docRef.id;
       responsaveis.push(responsavel);
+      console.log('Responsável adicionado com ID:', docRef.id);
       alert('Responsável adicionado com sucesso!');
       // Limpar o formulário
       document.getElementById('formAddResponsavel').reset();
       carregarResponsaveisNaLista();
     })
     .catch((error) => {
-      console.error('Erro ao adicionar responsável: ', error);
+      console.error('Erro ao adicionar responsável:', error);
     });
 }
 
 // Função para carregar responsáveis nos selects
 function carregarResponsaveisNoSelect(idSelect) {
   const select = document.getElementById(idSelect);
+  if (!select) {
+    console.error(`Elemento com ID "${idSelect}" não encontrado para carregar responsáveis.`);
+    return;
+  }
   select.innerHTML = ''; // Limpar opções
 
   responsaveis.forEach(responsavel => {
@@ -231,6 +294,14 @@ function carregarResponsaveisNoSelect(idSelect) {
     option.textContent = responsavel.nomeResponsavel;
     select.appendChild(option);
   });
+
+  // Adicionar uma opção padrão caso não haja responsáveis
+  if (responsaveis.length === 0) {
+    const option = document.createElement('option');
+    option.value = "";
+    option.textContent = "Nenhum responsável disponível";
+    select.appendChild(option);
+  }
 }
 
 // Função para carregar responsáveis na lista do modal
@@ -258,22 +329,34 @@ function carregarResponsaveisNaLista() {
     li.appendChild(btnExcluir);
     lista.appendChild(li);
   });
+
+  // Caso não haja responsáveis
+  if (responsaveis.length === 0) {
+    const li = document.createElement('li');
+    li.textContent = 'Nenhum responsável cadastrado.';
+    lista.appendChild(li);
+  }
 }
 
 // Função para excluir responsável
 function excluirResponsavel(idResponsavel) {
   db.collection('responsaveis').doc(idResponsavel).delete()
     .then(() => {
+      console.log('Responsável excluído com ID:', idResponsavel);
       alert('Responsável excluído com sucesso!');
     })
     .catch((error) => {
-      console.error('Erro ao excluir responsável: ', error);
+      console.error('Erro ao excluir responsável:', error);
     });
 }
 
 // Função para carregar produtos nos selects
 function carregarProdutosNoSelect(idSelect) {
   const select = document.getElementById(idSelect);
+  if (!select) {
+    console.error(`Elemento com ID "${idSelect}" não encontrado para carregar produtos.`);
+    return;
+  }
   select.innerHTML = ''; // Limpar opções
 
   produtos.forEach(produto => {
@@ -282,11 +365,23 @@ function carregarProdutosNoSelect(idSelect) {
     option.textContent = produto.nomeProduto;
     select.appendChild(option);
   });
+
+  // Adicionar uma opção padrão caso não haja produtos
+  if (produtos.length === 0) {
+    const option = document.createElement('option');
+    option.value = "";
+    option.textContent = "Nenhum produto disponível";
+    select.appendChild(option);
+  }
 }
 
 // Função para exibir produtos com botões de editar e excluir
 function exibirProdutos() {
   const produtosContent = document.getElementById('produtosContent');
+  if (!produtosContent) {
+    console.error('Elemento com ID "produtosContent" não encontrado.');
+    return;
+  }
   produtosContent.innerHTML = ''; // Limpar conteúdo
 
   if (produtos.length === 0) {
@@ -373,18 +468,18 @@ function exibirProdutos() {
 function excluirProduto(idProduto) {
   db.collection('produtos').doc(idProduto).delete()
     .then(() => {
+      console.log('Produto excluído com ID:', idProduto);
       alert('Produto excluído com sucesso!');
     })
     .catch((error) => {
-      console.error('Erro ao excluir produto: ', error);
+      console.error('Erro ao excluir produto:', error);
     });
 }
 
 // Função para abrir modal de edição de produto
 function abrirModalEditarProduto(produto) {
-  // Criar um modal dinâmico ou reutilizar um existente
-  // Aqui, vamos criar um modal simples para edição
-
+  console.log("Abrindo Modal de Edição para Produto ID:", produto.idProduto);
+  
   // Verificar se o modal de edição já existe
   let modalEditar = document.getElementById('modalEditarProduto');
   if (!modalEditar) {
@@ -429,25 +524,36 @@ function abrirModalEditarProduto(produto) {
 
     // Eventos de fechamento do modal de editar
     const closeEditarProduto = document.getElementById('closeEditarProduto');
-    closeEditarProduto.onclick = function() {
-      fecharModal(modalEditar);
-    };
+    if (closeEditarProduto) {
+      closeEditarProduto.onclick = function() {
+        fecharModal(modalEditar);
+      };
+    } else {
+      console.error('Botão de fechar do modalEditarProduto não encontrado.');
+    }
 
     // Evento para submissão do formulário de editar produto
     const formEditarProduto = document.getElementById('formEditarProduto');
-    formEditarProduto.onsubmit = function(e) {
-      e.preventDefault();
-      salvarEdicaoProduto();
-      fecharModal(modalEditar);
-    };
+    if (formEditarProduto) {
+      formEditarProduto.onsubmit = function(e) {
+        e.preventDefault();
+        salvarEdicaoProduto();
+        fecharModal(modalEditar);
+      };
+    } else {
+      console.error('Formulário de editar produto não encontrado no modalEditarProduto.');
+    }
 
     // Botão para adicionar responsável dentro do modal de editar
     const btnAddResponsavelEditar = document.getElementById('btnAddResponsavelEditar');
-    btnAddResponsavelEditar.onclick = function() {
-      abrirModal(modalAddResponsavel);
-      // Também garantir que a lista de responsáveis no modalAddResponsavel seja atualizada
-      carregarResponsaveisNaLista();
-    };
+    if (btnAddResponsavelEditar) {
+      btnAddResponsavelEditar.onclick = function() {
+        abrirModal(modalAddResponsavel);
+        carregarResponsaveisNaLista();
+      };
+    } else {
+      console.error('Botão "Adicionar Responsável" no modalEditarProduto não encontrado.');
+    }
   }
 
   // Preencher os campos com os dados do produto
@@ -467,11 +573,26 @@ function abrirModalEditarProduto(produto) {
 // Função para salvar a edição do produto
 function salvarEdicaoProduto() {
   const idProduto = document.getElementById('idEditarProduto').value;
-  const nomeProduto = document.getElementById('nomeEditarProduto').value;
+  const nomeProduto = document.getElementById('nomeEditarProduto').value.trim();
   const dataValidade = document.getElementById('dataEditarValidade').value;
-  const numeroLote = document.getElementById('numeroEditarLote').value;
+  const numeroLote = document.getElementById('numeroEditarLote').value.trim();
   const responsavelEntrada = document.getElementById('responsavelEditarEntrada').value;
   const quantidadeEntrada = parseInt(document.getElementById('quantidadeEditarEntrada').value);
+
+  if (!idProduto) {
+    alert('ID do produto não encontrado.');
+    return;
+  }
+
+  if (nomeProduto === "" || numeroLote === "") {
+    alert('Nome do produto e Número do Lote não podem estar vazios.');
+    return;
+  }
+
+  if (isNaN(quantidadeEntrada) || quantidadeEntrada <= 0) {
+    alert('A quantidade deve ser um número positivo.');
+    return;
+  }
 
   let produtoAtualizado = {
     nomeProduto: nomeProduto,
@@ -484,22 +605,33 @@ function salvarEdicaoProduto() {
   // Atualizar no Firestore
   db.collection('produtos').doc(idProduto).update(produtoAtualizado)
     .then(() => {
+      console.log('Produto atualizado com sucesso:', idProduto);
       alert('Produto atualizado com sucesso!');
     })
     .catch((error) => {
-      console.error('Erro ao atualizar produto: ', error);
+      console.error('Erro ao atualizar produto:', error);
     });
 }
 
 // Função para registrar saída de produto
 function registrarSaida() {
   const produtoId = document.getElementById('produtoSaida').value;
-  const numeroLote = document.getElementById('numeroLoteSaida').value;
+  const numeroLote = document.getElementById('numeroLoteSaida').value.trim();
   const quantidadeSaida = parseInt(document.getElementById('quantidadeSaida').value);
   const localDestino = document.getElementById('localDestino').value;
   const responsavelLiberacao = document.getElementById('responsavelLiberacao').value;
 
-  if (quantidadeSaida <= 0) {
+  if (!produtoId) {
+    alert('Selecione um produto válido.');
+    return;
+  }
+
+  if (numeroLote === "") {
+    alert('Número do Lote não pode estar vazio.');
+    return;
+  }
+
+  if (isNaN(quantidadeSaida) || quantidadeSaida <= 0) {
     alert('A quantidade de saída deve ser maior que zero.');
     return;
   }
@@ -527,15 +659,18 @@ function registrarSaida() {
             };
             db.collection('saidas').add(saida)
               .then(() => {
+                console.log('Saída registrada com sucesso:', saida);
                 alert('Saída registrada com sucesso!');
                 document.getElementById('formSaidaProduto').reset();
               })
               .catch((error) => {
-                console.error('Erro ao registrar saída: ', error);
+                console.error('Erro ao registrar saída:', error);
+                alert('Erro ao registrar saída. Verifique o console para mais detalhes.');
               });
           })
           .catch((error) => {
-            console.error('Erro ao atualizar quantidade do produto: ', error);
+            console.error('Erro ao atualizar quantidade do produto:', error);
+            alert('Erro ao atualizar quantidade do produto. Verifique o console para mais detalhes.');
           });
         } else {
           alert('Quantidade em estoque insuficiente.');
@@ -545,14 +680,20 @@ function registrarSaida() {
       }
     })
     .catch((error) => {
-      console.error('Erro ao buscar produto: ', error);
+      console.error('Erro ao buscar produto:', error);
+      alert('Erro ao buscar produto. Verifique o console para mais detalhes.');
     });
 }
 
 // Função para gerar relatórios (a ser implementada)
 function gerarRelatorios() {
   // Implementar conforme necessidade
-  document.getElementById('relatoriosContent').textContent = 'Funcionalidade de relatórios ainda não implementada.';
+  const relatoriosContent = document.getElementById('relatoriosContent');
+  if (relatoriosContent) {
+    relatoriosContent.textContent = 'Funcionalidade de relatórios ainda não implementada.';
+  } else {
+    console.error('Elemento com ID "relatoriosContent" não encontrado.');
+  }
 }
 
 // Fechar modais ao clicar fora deles
@@ -560,7 +701,7 @@ window.onclick = function(event) {
   const modals = document.querySelectorAll('.modal');
   modals.forEach(modal => {
     if (event.target == modal) {
-      modal.style.display = "none";
+      fecharModal(modal);
     }
   });
 }
