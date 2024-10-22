@@ -1,25 +1,3 @@
-// Função para adicionar responsável
-function adicionarResponsavel() {
-  const nomeResponsavel = document.getElementById('nomeResponsavel').value;
-
-  if (nomeResponsavel) {
-    db.collection('responsaveis').add({
-      nome: nomeResponsavel
-    })
-    .then(() => {
-      alert('Responsável adicionado com sucesso!');
-      carregarDados(); // Atualiza a lista de responsáveis
-      fecharModal(document.getElementById('modalAddResponsavel')); // Fecha o modal após o sucesso
-    })
-    .catch((error) => {
-      console.error('Erro ao adicionar responsável:', error);
-    });
-  } else {
-    alert('Por favor, preencha o nome do responsável.');
-  }
-}
-
-// Restante do script
 // Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyC2-ZPAOjhI1wxsU-6uNFhj7MLmlu_8CAw",
@@ -38,8 +16,6 @@ const db = firebase.firestore();
 
 // Variáveis globais
 let produtos = [];
-let entradas = [];
-let saidas = [];
 let responsaveis = [];
 
 // Eventos para os botões e carregamento de dados
@@ -172,4 +148,25 @@ function carregarDados() {
       produtos.push(produto);
     });
   });
+}
+
+// Função para adicionar responsável
+function adicionarResponsavel() {
+  const nomeResponsavel = document.getElementById('nomeResponsavel').value;
+
+  if (nomeResponsavel) {
+    db.collection('responsaveis').add({
+      nome: nomeResponsavel
+    })
+    .then(() => {
+      alert('Responsável adicionado com sucesso!');
+      carregarDados(); // Atualiza a lista de responsáveis
+      fecharModal(document.getElementById('modalAddResponsavel')); // Fecha o modal após o sucesso
+    })
+    .catch((error) => {
+      console.error('Erro ao adicionar responsável:', error);
+    });
+  } else {
+    alert('Por favor, preencha o nome do responsável.');
+  }
 }
