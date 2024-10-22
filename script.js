@@ -236,6 +236,10 @@ function carregarResponsaveisNoSelect(idSelect) {
 // Função para carregar responsáveis na lista do modal
 function carregarResponsaveisNaLista() {
   const lista = document.getElementById('listaResponsaveis');
+  if (!lista) {
+    console.error('Elemento com ID "listaResponsaveis" não encontrado.');
+    return;
+  }
   lista.innerHTML = ''; // Limpar a lista
 
   responsaveis.forEach(responsavel => {
@@ -441,6 +445,8 @@ function abrirModalEditarProduto(produto) {
     const btnAddResponsavelEditar = document.getElementById('btnAddResponsavelEditar');
     btnAddResponsavelEditar.onclick = function() {
       abrirModal(modalAddResponsavel);
+      // Também garantir que a lista de responsáveis no modalAddResponsavel seja atualizada
+      carregarResponsaveisNaLista();
     };
   }
 
