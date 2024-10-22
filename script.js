@@ -1,5 +1,24 @@
-// script.js
+// Função para adicionar responsável
+function adicionarResponsavel() {
+  const nomeResponsavel = document.getElementById('nomeResponsavel').value;
 
+  if (nomeResponsavel) {
+    db.collection('responsaveis').add({
+      nome: nomeResponsavel
+    })
+    .then(() => {
+      alert('Responsável adicionado com sucesso!');
+      carregarDados(); // Atualiza a lista de responsáveis
+    })
+    .catch((error) => {
+      console.error('Erro ao adicionar responsável:', error);
+    });
+  } else {
+    alert('Por favor, preencha o nome do responsável.');
+  }
+}
+
+// Restante do script
 // Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyC2-ZPAOjhI1wxsU-6uNFhj7MLmlu_8CAw",
@@ -30,28 +49,28 @@ document.addEventListener('DOMContentLoaded', function() {
   const btnAddProduto = document.getElementById('btnAddProduto');
   const btnSaidaProduto = document.getElementById('btnSaidaProduto');
   const btnProdutos = document.getElementById('btnProdutos');
-  const btnRelatorios = document.getElementById('btnRelatorios');
+  const btnRelatorios = document.getElementById('btnRelatorios';
 
   // Modais
   const modalAddProduto = document.getElementById('modalAddProduto');
-  const modalAddResponsavel = document.getElementById('modalAddResponsavel'); // Novo modal
+  const modalAddResponsavel = document.getElementById('modalAddResponsavel');
   const modalSaidaProduto = document.getElementById('modalSaidaProduto');
   const modalProdutos = document.getElementById('modalProdutos');
   const modalRelatorios = document.getElementById('modalRelatorios');
 
   // Botões de abrir modais
-  const btnAddResponsavel = document.getElementById('btnAddResponsavel'); // Novo botão
+  const btnAddResponsavel = document.getElementById('btnAddResponsavel');
 
   // Botões de fechar
   const closeAddProduto = document.getElementById('closeAddProduto');
-  const closeAddResponsavel = document.getElementById('closeAddResponsavel'); // Novo
+  const closeAddResponsavel = document.getElementById('closeAddResponsavel');
   const closeSaidaProduto = document.getElementById('closeSaidaProduto');
   const closeProdutos = document.getElementById('closeProdutos');
   const closeRelatorios = document.getElementById('closeRelatorios');
 
   // Formulários
   const formAddProduto = document.getElementById('formAddProduto');
-  const formAddResponsavel = document.getElementById('formAddResponsavel'); // Novo
+  const formAddResponsavel = document.getElementById('formAddResponsavel');
   const formSaidaProduto = document.getElementById('formSaidaProduto');
 
   // Eventos de abertura dos modais
@@ -154,35 +173,3 @@ function carregarDados() {
     });
   });
 }
-
-// Função para adicionar produto
-function adicionarProduto() {
-  const nomeProduto = document.getElementById('nomeProduto').value;
-  // Removido: const identificacaoNF = document.getElementById('identificacaoNF').value;
-  const dataValidade = document.getElementById('dataValidade').value;
-  const numeroLote = document.getElementById('numeroLote').value;
-  const responsavelEntrada = document.getElementById('responsavelEntrada').value;
-  const quantidadeEntrada = parseInt(document.getElementById('quantidadeEntrada').value);
-
-  let produto = {
-    nomeProduto: nomeProduto,
-    // identificacaoNF: identificacaoNF, // Removido
-    dataValidade: dataValidade,
-    numeroLote: numeroLote,
-    quantidade: quantidadeEntrada,
-    responsavelEntrada: responsavelEntrada
-  };
-
-  // Salvar no Firestore
-  db.collection('produtos').add(produto)
-    .then((docRef) => {
-      produto.idProduto = docRef.id;
-      produtos.push(produto);
-      alert('Produto adicionado com sucesso!');
-    })
-    .catch((error) => {
-      console.error('Erro ao adicionar produto: ', error);
-    });
-}
-
-// As demais funções (adicionarResponsavel, carregarResponsaveisNoSelect, carregarProdutosNoSelect, carregarLotesNoSelect, exibirProdutos, registrarSaida) permanecem as mesmas
