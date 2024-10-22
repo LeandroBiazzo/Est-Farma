@@ -2,10 +2,12 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 20px;
+  background-color: #f4f4f4;
 }
 
 h1 {
   text-align: center;
+  color: #333;
 }
 
 nav {
@@ -16,6 +18,11 @@ nav {
 nav button {
   margin: 0 10px;
   padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #content {
@@ -24,7 +31,7 @@ nav button {
 
 /* Estilos para o modal */
 .modal {
-  display: none; /* Escondido por padrão */
+  display: none;
   position: fixed;
   z-index: 1;
   left: 0;
@@ -32,15 +39,16 @@ nav button {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4); /* Fundo escuro */
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: 5% auto; /* Centralizado vertical e horizontalmente */
+  background-color: #fff;
+  margin: 5% auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Largura do modal */
+  border: 1px solid #ccc;
+  width: 80%;
+  border-radius: 5px;
 }
 
 .close {
@@ -52,7 +60,7 @@ nav button {
 
 .close:hover,
 .close:focus {
-  color: black;
+  color: #333;
   text-decoration: none;
   cursor: pointer;
 }
@@ -60,6 +68,7 @@ nav button {
 form label {
   display: block;
   margin-top: 10px;
+  color: #333;
 }
 
 form input,
@@ -74,6 +83,11 @@ form button {
   margin-top: 20px;
   padding: 10px;
   width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* Estilos para o campo Responsável com botão */
@@ -93,7 +107,11 @@ form button {
 
 .responsavel-input button {
   padding: 8px 12px;
-  width: auto; /* Ajusta a largura do botão */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* Estilos para a tabela de produtos */
