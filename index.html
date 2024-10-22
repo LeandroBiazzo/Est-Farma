@@ -20,8 +20,28 @@
     <!-- O conteúdo dinâmico será inserido aqui -->
   </section>
 
-  <!-- Inclusão dos Modais aqui -->
-  <!-- O código dos modais permanece sem alterações conforme o original fornecido -->
+  <!-- Modal para adicionar produto -->
+  <div id="modalAddProduto" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeAddProduto">&times;</span>
+      <h2>Adicionar Produto</h2>
+      <form id="formAddProduto">
+        <label for="nomeProduto">Nome do Produto:</label>
+        <input type="text" id="nomeProduto" name="nomeProduto" required>
+        <label for="dataValidade">Data de Validade:</label>
+        <input type="date" id="dataValidade" name="dataValidade" required>
+        <label for="numeroLote">Número do Lote:</label>
+        <input type="text" id="numeroLote" name="numeroLote" required>
+        <label for="responsavelEntrada">Responsável:</label>
+        <select id="responsavelEntrada" name="responsavelEntrada" required></select>
+        <label for="quantidadeEntrada">Quantidade:</label>
+        <input type="number" id="quantidadeEntrada" name="quantidadeEntrada" required>
+        <button type="submit">Adicionar Produto</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Outros modais aqui... -->
 
   <script src="script.js"></script>
 </body>
