@@ -137,6 +137,8 @@ function carregarDados() {
       responsavel.idResponsavel = doc.id;
       responsaveis.push(responsavel);
     });
+    carregarResponsaveisNoSelect('responsavelEntrada'); // Atualiza o select após carregar dados
+    carregarResponsaveisNoSelect('responsavelLiberacao'); // Atualiza o select de saída também
   });
 
   // Carregar produtos
@@ -169,4 +171,28 @@ function adicionarResponsavel() {
   } else {
     alert('Por favor, preencha o nome do responsável.');
   }
+}
+
+// Função para carregar responsáveis no select
+function carregarResponsaveisNoSelect(selectId) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = ''; // Limpa as opções atuais
+  responsaveis.forEach(responsavel => {
+    const option = document.createElement('option');
+    option.value = responsavel.idResponsavel;
+    option.textContent = responsavel.nome;
+    select.appendChild(option);
+  });
+}
+
+// Função para carregar produtos no select
+function carregarProdutosNoSelect(selectId) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = ''; // Limpa as opções atuais
+  produtos.forEach(produto => {
+    const option = document.createElement('option');
+    option.value = produto.idProduto;
+    option.textContent = produto.nomeProduto;
+    select.appendChild(option);
+  });
 }
