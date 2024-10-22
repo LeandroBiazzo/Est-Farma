@@ -9,6 +9,7 @@ function adicionarResponsavel() {
     .then(() => {
       alert('Responsável adicionado com sucesso!');
       carregarDados(); // Atualiza a lista de responsáveis
+      fecharModal(document.getElementById('modalAddResponsavel')); // Fecha o modal após o sucesso
     })
     .catch((error) => {
       console.error('Erro ao adicionar responsável:', error);
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const btnAddProduto = document.getElementById('btnAddProduto');
   const btnSaidaProduto = document.getElementById('btnSaidaProduto');
   const btnProdutos = document.getElementById('btnProdutos');
-  const btnRelatorios = document.getElementById('btnRelatorios';
+  const btnRelatorios = document.getElementById('btnRelatorios');
 
   // Modais
   const modalAddProduto = document.getElementById('modalAddProduto');
@@ -131,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
   formAddResponsavel.onsubmit = function(e) {
     e.preventDefault();
     adicionarResponsavel();
-    fecharModal(modalAddResponsavel);
   };
 
   // Evento para submissão do formulário de registrar saída
