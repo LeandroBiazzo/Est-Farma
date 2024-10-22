@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Controle de Estoque</title>
+  
   <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase App (núcleo SDK) - usando a versão de compatibilidade -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <!-- Firebase Firestore - usando a versão de compatibilidade -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
 </head>
 <body>
   <h1>Controle de Estoque</h1>
@@ -26,16 +31,31 @@
       <span class="close" id="closeAddProduto">&times;</span>
       <h2>Adicionar Produto</h2>
       <form id="formAddProduto">
+        <!-- Campos do formulário -->
         <label for="nomeProduto">Nome do Produto:</label>
         <input type="text" id="nomeProduto" name="nomeProduto" required>
+
+        <!-- Removido o campo Identificação da Nota Fiscal -->
+
         <label for="dataValidade">Data de Validade:</label>
         <input type="date" id="dataValidade" name="dataValidade" required>
+
         <label for="numeroLote">Número do Lote:</label>
         <input type="text" id="numeroLote" name="numeroLote" required>
-        <label for="responsavelEntrada">Responsável:</label>
-        <select id="responsavelEntrada" name="responsavelEntrada" required></select>
+
+        <div class="responsavel-field">
+          <label for="responsavelEntrada">Responsável:</label>
+          <div class="responsavel-input">
+            <select id="responsavelEntrada" name="responsavelEntrada" required>
+              <!-- Opções serão carregadas dinamicamente -->
+            </select>
+            <button type="button" id="btnAddResponsavel">Adicionar Responsável</button>
+          </div>
+        </div>
+
         <label for="quantidadeEntrada">Quantidade:</label>
         <input type="number" id="quantidadeEntrada" name="quantidadeEntrada" required>
+
         <button type="submit">Adicionar Produto</button>
       </form>
     </div>
@@ -54,8 +74,66 @@
     </div>
   </div>
 
-  <!-- Outros modais para saída de produtos, visualização de produtos e relatórios -->
+  <!-- Modal para registrar saída -->
+  <div id="modalSaidaProduto" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeSaidaProduto">&times;</span>
+      <h2>Registrar Saída</h2>
+      <form id="formSaidaProduto">
+        <!-- Campos do formulário -->
+        <label for="produtoSaida">Produto:</label>
+        <select id="produtoSaida" name="produtoSaida" required>
+          <!-- Opções serão carregadas dinamicamente -->
+        </select>
 
+        <label for="numeroLoteSaida">Número do Lote:</label>
+        <select id="numeroLoteSaida" name="numeroLoteSaida" required>
+          <!-- Opções serão carregadas dinamicamente -->
+        </select>
+
+        <label for="quantidadeSaida">Quantidade:</label>
+        <input type="number" id="quantidadeSaida" name="quantidadeSaida" required>
+
+        <label for="localDestino">Local de Destino:</label>
+        <select id="localDestino" name="localDestino" required>
+          <option value="Farmácia Clínica">Farmácia Clínica</option>
+          <option value="Centro Cirúrgico">Centro Cirúrgico</option>
+          <option value="Clínica Grandes">Clínica Grandes</option>
+          <option value="Patologia">Patologia</option>
+          <option value="Laboratório">Laboratório</option>
+        </select>
+
+        <label for="responsavelLiberacao">Responsável pela Liberação:</label>
+        <select id="responsavelLiberacao" name="responsavelLiberacao" required>
+          <!-- Opções serão carregadas dinamicamente -->
+        </select>
+
+        <button type="submit">Registrar Saída</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para exibir produtos -->
+  <div id="modalProdutos" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeProdutos">&times;</span>
+      <h2>Produtos em Estoque</h2>
+      <!-- Conteúdo dos produtos será inserido aqui -->
+      <div id="produtosContent"></div>
+    </div>
+  </div>
+
+  <!-- Modal para relatórios -->
+  <div id="modalRelatorios" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeRelatorios">&times;</span>
+      <h2>Relatórios</h2>
+      <!-- Conteúdo dos relatórios será inserido aqui -->
+      <div id="relatoriosContent"></div>
+    </div>
+  </div>
+
+  <!-- Seu script.js -->
   <script src="script.js"></script>
 </body>
 </html>
