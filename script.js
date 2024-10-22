@@ -22,35 +22,29 @@ let responsaveis = [];
 document.addEventListener('DOMContentLoaded', function() {
   carregarDados();
 
-  // Botões do menu
   const btnAddProduto = document.getElementById('btnAddProduto');
   const btnSaidaProduto = document.getElementById('btnSaidaProduto');
   const btnProdutos = document.getElementById('btnProdutos');
   const btnRelatorios = document.getElementById('btnRelatorios');
 
-  // Modais
   const modalAddProduto = document.getElementById('modalAddProduto');
   const modalAddResponsavel = document.getElementById('modalAddResponsavel');
   const modalSaidaProduto = document.getElementById('modalSaidaProduto');
   const modalProdutos = document.getElementById('modalProdutos');
   const modalRelatorios = document.getElementById('modalRelatorios');
 
-  // Botões de abrir modais
   const btnAddResponsavel = document.getElementById('btnAddResponsavel');
 
-  // Botões de fechar
   const closeAddProduto = document.getElementById('closeAddProduto');
   const closeAddResponsavel = document.getElementById('closeAddResponsavel');
   const closeSaidaProduto = document.getElementById('closeSaidaProduto');
   const closeProdutos = document.getElementById('closeProdutos');
   const closeRelatorios = document.getElementById('closeRelatorios');
 
-  // Formulários
   const formAddProduto = document.getElementById('formAddProduto');
   const formAddResponsavel = document.getElementById('formAddResponsavel');
   const formSaidaProduto = document.getElementById('formSaidaProduto');
 
-  // Eventos de abertura dos modais
   btnAddProduto.onclick = function() {
     abrirModal(modalAddProduto);
     carregarResponsaveisNoSelect('responsavelEntrada');
@@ -76,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
     gerarRelatorios();
   };
 
-  // Eventos de fechamento dos modais
   closeAddProduto.onclick = function() {
     fecharModal(modalAddProduto);
   };
@@ -97,20 +90,17 @@ document.addEventListener('DOMContentLoaded', function() {
     fecharModal(modalRelatorios);
   };
 
-  // Evento para submissão do formulário de adicionar produto
   formAddProduto.onsubmit = function(e) {
     e.preventDefault();
     adicionarProduto();
     fecharModal(modalAddProduto);
   };
 
-  // Evento para submissão do formulário de adicionar responsável
   formAddResponsavel.onsubmit = function(e) {
     e.preventDefault();
     adicionarResponsavel();
   };
 
-  // Evento para submissão do formulário de registrar saída
   formSaidaProduto.onsubmit = function(e) {
     e.preventDefault();
     registrarSaida();
@@ -118,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 });
 
-// Funções para abrir e fechar modais
 function abrirModal(modal) {
   modal.style.display = "block";
 }
@@ -127,9 +116,7 @@ function fecharModal(modal) {
   modal.style.display = "none";
 }
 
-// Função para carregar dados iniciais
 function carregarDados() {
-  // Carregar responsáveis
   db.collection('responsaveis').get().then((querySnapshot) => {
     responsaveis = [];
     querySnapshot.forEach((doc) => {
@@ -141,7 +128,6 @@ function carregarDados() {
     carregarResponsaveisNoSelect('responsavelLiberacao');
   });
 
-  // Carregar produtos
   db.collection('produtos').get().then((querySnapshot) => {
     produtos = [];
     querySnapshot.forEach((doc) => {
@@ -152,7 +138,6 @@ function carregarDados() {
   });
 }
 
-// Função para adicionar responsável
 function adicionarResponsavel() {
   const nomeResponsavel = document.getElementById('nomeResponsavel').value;
 
@@ -162,7 +147,7 @@ function adicionarResponsavel() {
     })
     .then(() => {
       alert('Responsável adicionado com sucesso!');
-      carregarDados(); // Atualiza a lista de responsáveis
+      carregarDados();
       fecharModal(document.getElementById('modalAddResponsavel'));
     })
     .catch((error) => {
@@ -173,40 +158,17 @@ function adicionarResponsavel() {
   }
 }
 
-// Função para excluir responsável
-function excluirResponsavel(idResponsavel) {
-  if (confirm('Tem certeza que deseja excluir este responsável?')) {
-    db.collection('responsaveis').doc(idResponsavel).delete().then(() => {
-      alert('Responsável excluído com sucesso!');
-      carregarDados(); // Atualiza a lista de responsáveis
-    }).catch((error) => {
-      console.error('Erro ao excluir responsável:', error);
-    });
-  }
-}
-
-// Função para carregar responsáveis no select
 function carregarResponsaveisNoSelect(selectId) {
   const select = document.getElementById(selectId);
-  select.innerHTML = ''; // Limpa as opções atuais
+  select.innerHTML = '';
   responsaveis.forEach(responsavel => {
     const option = document.createElement('option');
     option.value = responsavel.idResponsavel;
     option.textContent = responsavel.nome;
     select.appendChild(option);
   });
-
-  // Exibir lista de responsáveis com botão de excluir
-  const content = document.getElementById('content');
-  content.innerHTML = '<h3>Lista de Responsáveis</h3>';
-  responsaveis.forEach(responsavel => {
-    const div = document.createElement('div');
-    div.innerHTML = `${responsavel.nome} <button onclick="excluirResponsavel('${responsavel.idResponsavel}')">Excluir</button>`;
-    content.appendChild(div);
-  });
 }
 
-// Função para adicionar produto
 function adicionarProduto() {
   const nomeProduto = document.getElementById('nomeProduto').value;
   const dataValidade = document.getElementById('dataValidade').value;
@@ -224,7 +186,7 @@ function adicionarProduto() {
     })
     .then(() => {
       alert('Produto adicionado com sucesso!');
-      carregarDados(); // Atualiza a lista de produtos
+      carregarDados();
     })
     .catch((error) => {
       console.error('Erro ao adicionar produto:', error);
@@ -234,14 +196,37 @@ function adicionarProduto() {
   }
 }
 
-// Função para carregar produtos no select
-function carregarProdutosNoSelect(selectId) {
-  const select = document.getElementById(selectId);
-  select.innerHTML = ''; // Limpa as opções atuais
+function exibirProdutos() {
+  const produtosContent = document.getElementById('produtosContent');
+  produtosContent.innerHTML = '';
+
+  produtos.sort((a, b) => a.nomeProduto.localeCompare(b.nomeProduto));
+
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const tbody = document.createElement('tbody');
+
+  thead.innerHTML = `
+    <tr>
+      <th>Nome do Produto</th>
+      <th>Quantidade</th>
+      <th>Lote</th>
+      <th>Data de Validade</th>
+    </tr>
+  `;
+
   produtos.forEach(produto => {
-    const option = document.createElement('option');
-    option.value = produto.idProduto;
-    option.textContent = produto.nomeProduto;
-    select.appendChild(option);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${produto.nomeProduto}</td>
+      <td>${produto.quantidadeEntrada}</td>
+      <td>${produto.numeroLote}</td>
+      <td>${produto.dataValidade}</td>
+    `;
+    tbody.appendChild(tr);
   });
+
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  produtosContent.appendChild(table);
 }
